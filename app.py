@@ -1,22 +1,27 @@
 from concurrent.futures import thread
 from operator import methodcaller
-from flask import Flask, request,  json
+from flask import Flask, request, json
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 from keyfile import client_id, client_secret
 
-CLIENT_ID = client_id
-CLIENT_SECRET = client_secret
-client_credentials_manager = SpotifyClientCredentials(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
+client_credentials_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
 sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 app = Flask(__name__)
 
-def on_json_loading_failed_return_dict(e):   # 예외 처리
+def on_json_loading_failed_return_dict(e):
     return {}
+
 def get_search(sp, search):
     #return type : dict
     result = sp.search(search,type='track')
-    search_dict = {"artist_id" : [], "artist_name" : [], "tracks_id" : [], "tracks_name":[], "tracks_image":[]};
+    search_dict = {
+        "artist_id" : [],
+        "artist_name" : [], 
+        "tracks_id" : [], 
+        "tracks_name":[], 
+        "tracks_image":[]
+    };
 
     for i in range(len(result['tracks']["items"])):
         search_dict["artist_id"].append(result["tracks"]["items"][i]["artists"][0]["id"])
@@ -44,7 +49,14 @@ def get_song_recommen (sp, artist_id, artist_name, track_id):
 
     # recommendations
     rec = sp.recommendations(seed_artists=[artist_id], seed_genres=[genre], seed_tracks=[track_id], limit=3)
-    rec_dict = {"artist_name" : [],"artist_id":[],  "tracks_name":[], "tracks_id":[],"tracks_image":[], "tracks_prev":[]};
+    rec_dict = {
+        "artist_name" : [],
+        "artist_id":[],  
+        "tracks_name":[], 
+        "tracks_id":[],
+        "tracks_image":[], 
+        "tracks_prev":[]
+    };
     
     for track in rec['tracks']:
         rec_dict["artist_name"].append(track['artists'][0]['name'])
