@@ -1,2 +1,3 @@
-# Spotify_api
-Search and recommend music using Spotify
+# Spotify_REST_API
+
+Search and recommend music using Spotify, Flask
